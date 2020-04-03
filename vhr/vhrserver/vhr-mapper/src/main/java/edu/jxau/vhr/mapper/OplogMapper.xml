@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.jxau.vhr.mapper.OplogMapper">
+  <resultMap id="BaseResultMap" type="edu.jxau.vhr.model.Oplog">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="visitTime" jdbcType="TIMESTAMP" property="visitTime" />
+    <result column="username" jdbcType="VARCHAR" property="username" />
+    <result column="ip" jdbcType="VARCHAR" property="ip" />
+    <result column="executionTime" jdbcType="INTEGER" property="executionTime" />
+    <result column="method" jdbcType="VARCHAR" property="method" />
+    <result column="operation" jdbcType="VARCHAR" property="operation" />
+    <result column="params" jdbcType="VARCHAR" property="params" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, visitTime, username, ip, executionTime, `method`, `operation`, params
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from oplog
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <select id="getAllLogsByPage" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+     from oplog
+    <if test="page !=null and size!=null">
+      limit #{page},#{size}
+    </if>
+  </select>
+  <select id="getTotal" resultType="java.lang.Long">
+    select count(*) from oplog
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from oplog
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="edu.jxau.vhr.model.Oplog" useGeneratedKeys="true">
+    insert into oplog (visitTime, username, ip, 
+      executionTime, `method`, `operation`, 
+      params)
+    values (#{visitTime,jdbcType=TIMESTAMP}, #{username,jdbcType=VARCHAR}, #{ip,jdbcType=VARCHAR}, 
+      #{executionTime,jdbcType=INTEGER}, #{method,jdbcType=VARCHAR}, #{operation,jdbcType=VARCHAR}, 
+      #{params,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="edu.jxau.vhr.model.Oplog" useGeneratedKeys="true">
+    insert into oplog
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="visitTime != null">
+        visitTime,
+      </if>
+      <if test="username != null">
+        username,
+      </if>
+      <if test="ip != null">
+        ip,
+      </if>
+      <if test="executionTime != null">
+        executionTime,
+      </if>
+      <if test="method != null">
+        `method`,
+      </if>
+      <if test="operation != null">
+        `operation`,
+      </if>
+      <if test="params != null">
+        params,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="visitTime != null">
+        #{visitTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="username != null">
+        #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="ip != null">
+        #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="executionTime != null">
+        #{executionTime,jdbcType=INTEGER},
+      </if>
+      <if test="method != null">
+        #{method,jdbcType=VARCHAR},
+      </if>
+      <if test="operation != null">
+        #{operation,jdbcType=VARCHAR},
+      </if>
+      <if test="params != null">
+        #{params,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="edu.jxau.vhr.model.Oplog">
+    update oplog
+    <set>
+      <if test="visitTime != null">
+        visitTime = #{visitTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="username != null">
+        username = #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="ip != null">
+        ip = #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="executionTime != null">
+        executionTime = #{executionTime,jdbcType=INTEGER},
+      </if>
+      <if test="method != null">
+        `method` = #{method,jdbcType=VARCHAR},
+      </if>
+      <if test="operation != null">
+        `operation` = #{operation,jdbcType=VARCHAR},
+      </if>
+      <if test="params != null">
+        params = #{params,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="edu.jxau.vhr.model.Oplog">
+    update oplog
+    set visitTime = #{visitTime,jdbcType=TIMESTAMP},
+      username = #{username,jdbcType=VARCHAR},
+      ip = #{ip,jdbcType=VARCHAR},
+      executionTime = #{executionTime,jdbcType=INTEGER},
+      `method` = #{method,jdbcType=VARCHAR},
+      `operation` = #{operation,jdbcType=VARCHAR},
+      params = #{params,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

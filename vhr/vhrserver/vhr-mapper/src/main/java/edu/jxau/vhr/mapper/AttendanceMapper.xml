@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.jxau.vhr.mapper.AttendanceMapper">
+  <resultMap id="BaseResultMap" type="edu.jxau.vhr.model.Attendance">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="username" jdbcType="VARCHAR" property="username" />
+    <result column="clickTime" jdbcType="TIMESTAMP" property="clickTime" />
+    <result column="clickDate" jdbcType="DATE" property="clickDate"/>
+    <result column="firstClickTime" jdbcType="TIMESTAMP" property="firstClickTime"/>
+    <result column="lastClickTime" jdbcType="TIMESTAMP" property="lastClickTime"/>
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, username, clickTime
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from attendance
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <select id="getAttendByPage" resultMap="BaseResultMap">
+    SELECT
+    username,
+    clickTime,
+    clickDate,
+    Max( clickTime ) AS lastClickTime,
+    Min( clickTime ) AS firstClickTime,
+    count(*)
+    FROM
+    `attendance`
+    where 1 = 1
+    <if test="name !=null and name!=''">
+      and username like concat('%',#{name},'%')
+    </if>
+
+    GROUP BY
+    clickDate,username
+    <if test="page !=null and size!=null">
+      limit #{page},#{size}
+    </if>
+  </select>
+  <select id="getTotal" resultType="java.lang.Long">
+    select count(*) from
+      (SELECT
+      username,
+      clickTime,
+      clickDate,
+      Max( clickTime ) AS lastClickTime,
+      Min( clickTime ) AS firstClickTime,
+      count(*)
+    FROM
+	    `attendance`
+	where 1 = 1
+    <if test="name !=null and name!=''">
+      and username like concat('%',#{name},'%')
+    </if>
+    GROUP BY
+        clickDate,username) a;
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from attendance
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="edu.jxau.vhr.model.Attendance" useGeneratedKeys="true">
+    insert into attendance (username, clickTime)
+    values (#{username,jdbcType=VARCHAR}, #{clickTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="edu.jxau.vhr.model.Attendance" useGeneratedKeys="true">
+    insert into attendance
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="username != null">
+        username,
+      </if>
+      <if test="clickTime != null">
+        clickTime,
+      </if>
+      <if test="clickDate != null">
+        clickDate,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="username != null">
+        #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="clickTime != null">
+        #{clickTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="clickDate != null">
+        #{clickDate,jdbcType=DATE},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="edu.jxau.vhr.model.Attendance">
+    update attendance
+    <set>
+      <if test="username != null">
+        username = #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="clickTime != null">
+        clickTime = #{clickTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="edu.jxau.vhr.model.Attendance">
+    update attendance
+    set username = #{username,jdbcType=VARCHAR},
+      clickTime = #{clickTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

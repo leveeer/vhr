@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.jxau.vhr.mapper.PlanMapper">
+
+    <resultMap type="edu.jxau.vhr.model.Plan" id="PlanMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="planDate" column="planDate" jdbcType="DATE"/>
+        <result property="plan" column="plan" jdbcType="VARCHAR"/>
+        <result property="adduser" column="adduser" jdbcType="VARCHAR"/>
+        <result property="remark" column="remark" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="PlanMap">
+        select
+          id, planDate, plan, adduser, remark
+        from vhr.plan
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="PlanMap">
+        select
+          id, planDate, plan, adduser, remark
+        from vhr.plan
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="PlanMap">
+        select
+          id, planDate, plan, adduser, remark
+        from vhr.plan
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="planDate != null">
+                and planDate = #{date}
+            </if>
+            <if test="plan != null and plan != ''">
+                and plan = #{plan}
+            </if>
+            <if test="adduser != null and adduser != ''">
+                and adduser = #{adduser}
+            </if>
+            <if test="remark != null and remark != ''">
+                and remark = #{remark}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into vhr.plan(planDate, plan, adduser, remark)
+        values (#{planDate}, #{plan}, #{adduser}, #{remark})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update vhr.plan
+        <set>
+            <if test="planDate != null">
+                planDate = #{date},
+            </if>
+            <if test="plan != null and plan != ''">
+                plan = #{plan},
+            </if>
+            <if test="adduser != null and adduser != ''">
+                adduser = #{adduser},
+            </if>
+            <if test="remark != null and remark != ''">
+                remark = #{remark},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from vhr.plan where id = #{id}
+    </delete>
+
+</mapper>
