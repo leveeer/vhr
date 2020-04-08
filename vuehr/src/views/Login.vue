@@ -111,7 +111,7 @@
         box-shadow: 0 0 25px #cac6c6;
         background: linear-gradient(-160deg, rgba(19, 38, 170, 0.8) 0%, rgba(196, 196, 196, 0.8) 50%, rgba(48, 52, 116, 0.8) 100%) no-repeat;
     }
-    .el-form-item__label{
+    .loginContainer .el-form-item__label{
         color: white;
     }
 
@@ -128,4 +128,10 @@
         margin: 0px 0px 15px 0px;
         color: #fafafa;
     }
+
+    .loginRemember .el-checkbox__label{
+        color: #fafafa;
+    }
+
+
 </style>

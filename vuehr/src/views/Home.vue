@@ -177,12 +177,13 @@
     }
 </script>
 
-<style>
+<style scoped>
 
     .aside {
         display: block;
         position: relative;
-        overflow-y: scroll;
+        overflow-y: hidden;
+        overflow-x: hidden;
         background-color: #334157 !important;
     }
 
